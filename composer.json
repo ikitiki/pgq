@@ -1,6 +1,6 @@
 {
   "name": "ikitiki/pgq",
-  "description": "PGQ Consumer",
+  "description": "PGQ Consumer for PHP",
   "keywords": ["postgresql", "pgq"],
   "version": "1.0.0",
   "type": "library",
