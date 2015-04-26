@@ -1,2 +1,2 @@
 # pgq
-PHP PGQ consumer
+PGQ consumer for PHP
