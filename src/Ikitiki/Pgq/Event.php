@@ -53,6 +53,15 @@ abstract class Event implements \JsonSerializable
      */
     private $tickId;
 
+    /**
+     * Constructor
+     *
+     * @param array $data
+     * @param int $id
+     * @param int $txId
+     * @param int $time
+     * @param int $tickId
+     */
     public function __construct(array $data, $id = null, $txId = null, $time = null, $tickId = null)
     {
         $this->id = $id;
@@ -75,7 +84,7 @@ abstract class Event implements \JsonSerializable
     /**
      * Set fail reason
      *
-     * @param $failReason string
+     * @param string $failReason
      */
     final protected function failed($failReason)
     {
