@@ -221,6 +221,7 @@ SQL;
             $batch['id']
         );
 
+        $this->db->beginTransaction();
         foreach ($events as $eventData) {
             if (empty($eventData['ev_type'])) {
                 continue;
@@ -246,8 +247,12 @@ SQL;
         if (!$batchFailed) {
             $status = $this->db->exec('select pgq.finish_batch(%d) as status', $batch['id'])->fetchField('status');
             if ($status != self::STATUS_OK) {
+                $this->db->rollback();
                 throw new \Exception('can`t finish batch');
             }
+            $this->db->commit();
+        } else {
+            $this->db->rollback();
         }
 
         $this->batchEventsStats['total'] = count($events);
