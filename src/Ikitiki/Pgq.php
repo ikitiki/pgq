@@ -41,6 +41,13 @@ class Pgq
     private $sleepInterval = 0;
 
     /**
+     * Filter upon ev_extra1 event field
+     *
+     * @var array
+     */
+    private $extra1Filter = [];
+
+    /**
      * Batch events stats
      *
      * @var array
@@ -80,6 +87,16 @@ class Pgq
     public function setSleepInterval($value)
     {
         $this->sleepInterval = $value;
+    }
+
+    /**
+     * Set filter on extra1 field
+     *
+     * @param array $filter
+     */
+    public function setExtra1Filter(array $filter)
+    {
+        $this->extra1Filter = $filter;
     }
 
     /**
@@ -216,7 +233,8 @@ SQL;
         $batchFailed = false;
         $events = $this->db->exec(
             'select
-                ev_id, ev_time, ev_txid, ev_retry, ev_type, ev_data
+                ev_id, ev_time, ev_txid, ev_retry, ev_type, ev_data,
+                ev_extra1, ev_extra2, ev_extra3, ev_extra4
              from pgq.get_batch_events(%d)',
             $batch['id']
         );
@@ -224,6 +242,13 @@ SQL;
         $this->db->beginTransaction();
         foreach ($events as $eventData) {
             if (empty($eventData['ev_type'])) {
+                continue;
+            }
+
+            if ($this->extra1Filter
+                && $eventData['ev_extra1']
+                && !in_array($eventData['ev_extra1'], $this->extra1Filter)
+            ) {
                 continue;
             }
 
